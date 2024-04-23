@@ -46,34 +46,32 @@ def index():
     # Main page
     return render_template('index.html')
 
-
 @app.route('/predict', methods=['GET', 'POST'])
 def upload():
     if request.method == 'POST':
         # Get the file from post request
         f = request.files['file']
-
+        
         # Save the file to ./uploads
         basepath = os.path.dirname(__file__)
-        file_path = os.path.join(basepath, 'uploads', secure_filename(f.filename))
+        uploads_dir = os.path.join(basepath, 'uploads')
+        
+        # Create the 'uploads' directory if it doesn't exist
+        if not os.path.exists(uploads_dir):
+            os.makedirs(uploads_dir)
+        
+        file_path = os.path.join(uploads_dir, secure_filename(f.filename))
         f.save(file_path)
 
         # Make prediction
         pred = model_predict(file_path, model)
-        os.remove(file_path)            #removes file from the server after prediction has been returned
+        os.remove(file_path)  # removes file from the server after prediction has been returned
 
-        str0 = 'Glioma'
-        str1 = 'Meningioma'
-        str3 = 'pituitary'
-        str2 = 'No Tumour'
-        if pred[0] == 0:
-            return str0
-        elif pred[0] == 1:
-            return str1
-        elif pred[0]==3:
-            return str3
-        else:
-            return str2
+        # Map prediction indices to labels
+        labels = ['Glioma', 'Meningioma', 'pituitary', 'No Tumour']
+        prediction_label = labels[pred[0]]
+
+        return prediction_label
     return None
 
 if __name__ == '__main__':
