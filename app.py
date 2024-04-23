@@ -72,7 +72,7 @@ def upload():
         prediction_label = labels[pred[0]]
 
         return prediction_label
-    return None
+    return "file not found"
 
 if __name__ == '__main__':
         app.run(debug=True, host="localhost", port=5000)    #debug is true for the development phase
