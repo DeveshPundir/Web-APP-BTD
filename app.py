@@ -75,5 +75,5 @@ def upload():
     return "file not found"
 
 if __name__ == '__main__':
-        app.run(debug=True, host="localhost", port=5000)    #debug is true for the development phase
+        app.run(debug=True,port=5000)    #debug is true for the development phase
     
